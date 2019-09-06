@@ -16,7 +16,7 @@ namespace Neu
 
 		public byte Y;
 
-		public BitArray P;
+		public NeuCpuStatusRegister P;
 
 		public NeuCpuRegisters()
 		{
@@ -25,7 +25,7 @@ namespace Neu
 			this.A = 0;
 			this.X = 0;
 			this.Y = 0;
-			this.P = new BitArray( 8, false );
+			this.P = new NeuCpuStatusRegister();
 		}
 	}
 }
