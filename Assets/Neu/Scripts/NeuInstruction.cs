@@ -7,6 +7,6 @@ namespace Neu
 	{
 		public abstract string Name { get; }
 
-		public abstract void Run( NeuCpu cpu, ushort operandValue );
+		public abstract void Run( NeuCpu cpu, ushort operand, ushort value );
 	}
 }

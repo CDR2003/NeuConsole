@@ -40,15 +40,23 @@ namespace Neu
 		{
 			var opcode = this.NextOpcode();
 			var addressingMode = NeuInstructionTable.GetAddressingMode( opcode );
-			var operandValue = this.ReadOperandValue( addressingMode );
+			var operand = this.ReadOperand( addressingMode );
+			var value = this.ReadOperandValue( addressingMode, operand );
 			var instruction = NeuInstructionTable.GetInstruction( opcode );
-			instruction.Run( this, operandValue );
+			instruction.Run( this, operand, value );
 		}
 
 		public byte ReadByte( ushort address )
 		{
 			this.CycleCount++;
 			return _memory.Read( address );
+		}
+
+		public ushort ReadWord( ushort address )
+		{
+			var low = this.ReadByte( address );
+			var high = this.ReadByte( address );
+			return (ushort)( low | ( high << 8 ) );
 		}
 
 		public void WriteByte( ushort address, byte data )
@@ -70,7 +78,14 @@ namespace Neu
 			return data;
 		}
 
-		private ushort ReadOperandValue( NeuAddressingMode addressingMode )
+		private ushort NextWord()
+		{
+			var data = this.ReadWord( this.Registers.PC );
+			this.Registers.PC += 2;
+			return data;
+		}
+
+		private ushort ReadOperand( NeuAddressingMode addressingMode )
 		{
 			switch( addressingMode )
 			{
@@ -84,15 +99,15 @@ namespace Neu
 				case NeuAddressingMode.Relative:
 					return this.NextByte();
 				case NeuAddressingMode.ZeroPage:
-					//return this.NextByte();
+					return this.NextByte();
 				case NeuAddressingMode.ZeroPageX:
-					//return (byte)( this.NextByte() + this.Registers.X );
+					return this.ReadZeroPageIndexed( this.Registers.X );
 				case NeuAddressingMode.ZeroPageY:
-					//return (byte)( this.NextByte() + this.Registers.Y );
+					return this.ReadZeroPageIndexed( this.Registers.Y );
 				case NeuAddressingMode.Indirect:
-					break;
+					return this.NextWord();
 				case NeuAddressingMode.IndirectX:
-					break;
+					
 				case NeuAddressingMode.IndirectY:
 					break;
 				case NeuAddressingMode.IndirectYW:
@@ -109,6 +124,28 @@ namespace Neu
 					break;
 				default:
 					break;
+			}
+		}
+
+		private byte ReadZeroPageIndexed( byte index )
+		{
+			var data = (byte)( this.NextByte() + index );
+
+			// Dummy Read
+			this.ReadByte( data );
+
+			return data;
+		}
+
+		private ushort ReadOperandValue( NeuAddressingMode addressingMode, ushort operand )
+		{
+			if( addressingMode >= NeuAddressingMode.ZeroPage )
+			{
+				return this.ReadByte( operand );
+			}
+			else
+			{
+				return (byte)operand;
 			}
 		}
 
