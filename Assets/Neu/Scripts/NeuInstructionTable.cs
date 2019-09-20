@@ -18,7 +18,7 @@ namespace Neu
 			return _instructions[opcode];
 		}
 
-		private static NeuAddressingMode GetAddressingMode( byte opcode )
+		public static NeuAddressingMode GetAddressingMode( byte opcode )
 		{
 			return _addressingModes[opcode];
 		}

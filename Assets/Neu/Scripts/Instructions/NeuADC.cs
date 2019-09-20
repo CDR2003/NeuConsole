@@ -13,7 +13,7 @@ namespace Neu.Instructions
 			}
 		}
 
-		public override void Run( NeuCpu cpu, NeuAddressingMode mode, ushort operand )
+		public override void Run( NeuCpu cpu, ushort operandValue )
 		{
 
 		}

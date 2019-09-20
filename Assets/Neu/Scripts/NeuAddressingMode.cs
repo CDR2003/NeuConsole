@@ -5,18 +5,22 @@ namespace Neu
 {
 	public enum NeuAddressingMode
 	{
-		Implicit,
+		None,
 		Accumulator,
+		Implicit,
 		Immediate,
-		ZeroPage,
-		Absolute,
 		Relative,
-		Indirect,
+		ZeroPage,
 		ZeroPageX,
 		ZeroPageY,
-		AbsoluteX,
-		AbsoluteY,
+		Indirect,
 		IndirectX,
 		IndirectY,
+		IndirectYW,
+		Absolute,
+		AbsoluteX,
+		AbsoluteXW,
+		AbsoluteY,
+		AbsoluteYW,
 	}
 }
